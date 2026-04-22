@@ -164,7 +164,162 @@
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-burger { display: flex; }
       .nav-inner { padding: 16px 24px; }
+    }
+
+    /* ===== NAV BURGER BUTTON ===== */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      z-index: 1001;
+    }
+    .nav-burger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1), width 0.3s ease, opacity 0.2s ease;
+      transform-origin: center;
+    }
+    .nav-burger span:nth-child(2) { width: 16px; }
+    .nav-burger.is-open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+      width: 24px;
+    }
+    .nav-burger.is-open span:nth-child(2) {
+      transform: rotate(-45deg) translate(5px, -5px);
+      width: 24px;
+    }
+
+    /* ===== MOBILE DRAWER ===== */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--bg);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  visibility 0s linear 0.45s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    .mobile-drawer::before {
+      content: "";
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 80vw;
+      height: 80vw;
+      max-width: 700px;
+      max-height: 700px;
+      background: radial-gradient(circle, rgba(212, 255, 58, 0.05) 0%, transparent 60%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .mobile-drawer.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  visibility 0s linear;
+    }
+    body.drawer-open {
+      overflow: hidden;
+    }
+
+    .mobile-drawer-inner {
+      width: 100%;
+      max-width: 420px;
+      padding: 100px 32px 40px;
+      position: relative;
+      z-index: 2;
+    }
+    .mobile-drawer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+    .mobile-drawer-nav {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--line);
+    }
+    .mobile-drawer-nav a {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      padding: 22px 4px;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      transition: color 0.3s ease, padding-left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-drawer-nav a:active,
+    .mobile-drawer-nav a:hover {
+      color: var(--accent);
+      padding-left: 14px;
+    }
+    .mobile-drawer-nav a .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--ink-mute);
+      font-weight: 400;
+      min-width: 24px;
+    }
+
+    .mobile-drawer-footer {
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+    .mobile-drawer-wpp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 24px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      transition: transform 0.3s ease;
+    }
+    .mobile-drawer-wpp:active {
+      transform: scale(0.98);
+    }
+
+    /* drawer só funciona no mobile; no desktop some */
+    @media (min-width: 769px) {
+      .mobile-drawer { display: none !important; }
     }
 
     /* ---------- HERO ---------- */
@@ -1614,8 +1769,13 @@
         font-size: 10px;
       }
 
-      /* ===== SECTION PADDING GERAL ===== */
-      section { padding: 72px 0; }
+      /* ===== SECTION PADDING GERAL (mais respiro entre seções) ===== */
+      section {
+        padding: 96px 0;
+        border-top: 1px solid rgba(212, 255, 58, 0.12);
+      }
+      /* hero não é section, mas a primeira section após ele também não precisa do border */
+      .hero + section { border-top: none; }
 
       /* ===== HERO ===== */
       .hero {
@@ -1888,8 +2048,31 @@
         <a href="#sobre">Sobre</a>
       </div>
       <a href="#contato" class="nav-cta">Solicitar orçamento</a>
+      <button class="nav-burger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-inner">
+      <div class="mobile-drawer-label">— Navegar</div>
+      <nav class="mobile-drawer-nav">
+        <a href="#servicos" data-section="01"><span class="num">01</span><span>Serviços</span></a>
+        <a href="#destaque" data-section="02"><span class="num">02</span><span>Destaque</span></a>
+        <a href="#cases" data-section="03"><span class="num">03</span><span>Cases</span></a>
+        <a href="#projetos" data-section="04"><span class="num">04</span><span>Demos</span></a>
+        <a href="#sobre" data-section="05"><span class="num">05</span><span>Sobre</span></a>
+        <a href="#experiencia" data-section="06"><span class="num">06</span><span>Trajetória</span></a>
+        <a href="#contato" data-section="07"><span class="num">07</span><span>Contato</span></a>
+      </nav>
+      <div class="mobile-drawer-footer">
+        <a href="https://wa.me/5541995307681?text=Ol%C3%A1%20Marcus%2C%20vim%20pelo%20seu%20portf%C3%B3lio." target="_blank" rel="noopener" class="mobile-drawer-wpp">Chamar no WhatsApp →</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO -->
   <header class="hero">
@@ -2409,6 +2592,37 @@
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    // ===== MOBILE DRAWER =====
+    const burger = document.querySelector('.nav-burger');
+    const drawer = document.querySelector('.mobile-drawer');
+    const body = document.body;
+
+    function toggleDrawer(open) {
+      const isOpen = open !== undefined ? open : !drawer.classList.contains('is-open');
+      drawer.classList.toggle('is-open', isOpen);
+      burger.classList.toggle('is-open', isOpen);
+      body.classList.toggle('drawer-open', isOpen);
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      drawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
+
+    burger.addEventListener('click', () => toggleDrawer());
+
+    // Fechar drawer ao clicar em link de navegação
+    drawer.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        // pequeno delay pra deixar a transição visual acontecer
+        setTimeout(() => toggleDrawer(false), 120);
+      });
+    });
+
+    // Fechar com ESC (desktop / teclado)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        toggleDrawer(false);
+      }
+    });
   </script>
 </body>
 </html>
